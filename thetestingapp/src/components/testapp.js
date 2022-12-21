@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 const Test = () =>{
-    const [activity, setActivity] = useState([]);
+    const [activities, setActivities] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     
     const loadTest = ()=>{
@@ -9,7 +9,7 @@ const Test = () =>{
         fetch("https://www.boredapi.com/api/activity")
         .then((res)=>res.json())
         .then((data) => {
-        setActivity(data.activity)
+        setActivities([...activities, data.activity])
         setIsLoading(false)
         });
     }
@@ -18,7 +18,7 @@ const Test = () =>{
         loadTest()
     }, [])
 
-    if(isLoading){
+    if(activities.length === 0){
         return (
             <div>
                 <p>page loading...</p>
@@ -28,8 +28,12 @@ const Test = () =>{
     
     return(
         <div>
-            <h1>{activity}</h1>
-            <button onClick={loadTest}>Load More</button>
+            <ul>
+                {activities.map((activity, index) => {
+                    return <li key={index}>{activity}</li>
+                })}
+            </ul>
+            <button disabled={isLoading} onClick={loadTest}>Load More</button>
         </div>
     )
 }
